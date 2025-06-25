@@ -8,7 +8,7 @@ pipeline {
         SCANNER_HOME=tool 'sonar-scanner'
         AWS_ACCOUNT_ID = credentials('ACCOUNT_ID')
         AWS_ECR_REPO_NAME = credentials('ECR_REPO_BACKEND')
-        AWS_DEFAULT_REGION = 'us-west-2'
+        AWS_DEFAULT_REGION = 'us-east-1'
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/"
     }
     stages {
@@ -29,9 +29,7 @@ pipeline {
                         sh ''' 
                             $SCANNER_HOME/bin/sonar-scanner \
                             -Dsonar.projectKey=devops-backend \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=http://ciserver:9000 \
-                            -Dsonar.login=sqp_cef76984cefae6dd48c95850f23e4dcd048fe909
+                            -Dsonar.sources=.
                         '''
                     }
                 }
@@ -40,14 +38,21 @@ pipeline {
         stage('Quality Check') {
             steps {
                 script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
+                    echo "Waiting a few seconds to ensure CE task is registered..."
+                    sleep 10 // wait for SonarQube to register the CE task properly
+                    timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                    }
                 }
             }
         }
         stage('OWASP Dependency-Check Scan') {
+            environment {
+        NVD_API_KEY = '4ad41c2e-fe74-4514-8366-052e9a96064d'
+            }
             steps {
                 dir('app-code/backend') {
-                    dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+                    dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit --nvdApiKey=$NVD_API_KEY', odcInstallation: 'DP-Check'
                     dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
                 }
             }
