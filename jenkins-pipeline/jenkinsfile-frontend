@@ -47,6 +47,7 @@ pipeline {
                 }
             }
         }
+        }
         stage('OWASP Dependency-Check Scan') {
             environment {
         NVD_API_KEY = '4ad41c2e-fe74-4514-8366-052e9a96064d'
@@ -124,6 +125,5 @@ pipeline {
                 }
             }
         }
-    }
     }
 }
