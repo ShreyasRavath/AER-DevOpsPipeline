@@ -156,7 +156,26 @@ backend-ingress --> <repo>/kubernetes-manifests/backend-ingress
 
 Step 18: 
 Once done. All five apps will be visible as synced and we can validate the pod deployment on our cluster using following command
+```
+kubectl get pods -n three-tier
+```
+![alt text](image-1.png)
 
+
+Deletion Steps: 
+#first we need to delete the cluster 
+eksctl delete cluster --name three-tier-k8s-eks-cluster --region us-east-1 --wait --timeout 30m
+#wait for cluster to get deleted. 
+
+Once the cluster is deleted, we need to delete jenkins servers. execute following command on cloudshell
+
+```
+cd AER-DevOpsPipeline/jenkins-server-terraform/
+terraform destroy
+```
+#approve the destruction. 
+
+Thanks Jesse for wonderful training!!!
 
 
 
