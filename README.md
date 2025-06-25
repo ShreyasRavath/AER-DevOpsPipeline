@@ -146,5 +146,17 @@ export ARGOCD_SERVER=$(kubectl get svc argocd-server -n argocd -o json | jq -r '
 ```
 
 Step 17:
+Logon to the argocd application using the password obtained in last step with admin as username. 
+We need to configure five application to be configured. Create newapp and set following path within repo to register five apps. 
+frontend --> <repo>/kubernetes-manifests/frontend
+backend --> <repo>/kubernetes-manifests/backend
+database --> <repo>/kubernetes-manifests/database
+frontend-ingress --> <repo>/kubernetes-manifests/frontend-ingress
+backend-ingress --> <repo>/kubernetes-manifests/backend-ingress
+
+Step 18: 
+Once done. All five apps will be visible as synced and we can validate the pod deployment on our cluster using following command
+
+
 
 
