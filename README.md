@@ -121,6 +121,10 @@ Login to grafana and create prometheus datasource and set the dashboard to use t
 Create two pipeline
 1. frontend : copy the code from https://github.com/ShreyasRavath/AER-DevOpsPipeline.git repo jenkins-pipeline-->jenkinsfile-frontend
 2. backend : copy the code from https://github.com/ShreyasRavath/AER-DevOpsPipeline.git repo jenkins-pipeline-->jenkinsfile-backend
+![Pipelines](https://github.com/ShreyasRavath/AER-DevOpsPipeline/raw/main/image-3.png)
+![Successful Backend](https://github.com/ShreyasRavath/AER-DevOpsPipeline/raw/main/image-4.png)
+![Successful Frontend](https://github.com/ShreyasRavath/AER-DevOpsPipeline/raw/main/image-5.png)
+
 
 #Step15: Install ArgoCD for deployment automation
 execute following commands on the jenkins server
@@ -154,12 +158,14 @@ database --> <repo>/kubernetes-manifests/database
 frontend-ingress --> <repo>/kubernetes-manifests/frontend-ingress
 backend-ingress --> <repo>/kubernetes-manifests/backend-ingress
 
+![ArgoApps](image-2.png)
+
 #Step 18: 
 Once done. All five apps will be visible as synced and we can validate the pod deployment on our cluster using following command
 ```
 kubectl get pods -n three-tier
 ```
-![alt text](https://github.com/ShreyasRavath/AER-DevOpsPipeline/raw/main/image-1.png)
+![App Pods after argoCD](https://github.com/ShreyasRavath/AER-DevOpsPipeline/raw/main/image-1.png)
 
 
 Deletion #Steps: 
