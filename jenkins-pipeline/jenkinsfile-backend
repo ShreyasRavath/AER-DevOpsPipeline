@@ -19,7 +19,7 @@ pipeline {
         }
         stage('Checkout from Git') {
             steps {
-                git branch: 'main', credentialsId: 'GITHUB', url: 'https://github.com/codewithmuh/three-tier-devsecops-project.git'
+                git branch: 'main', credentialsId: 'GITHUB', url: 'https://github.com/ShreyasRavath/AER-DevOpsPipeline.git'
             }
         }
         stage('Sonarqube Analysis') {
@@ -30,7 +30,7 @@ pipeline {
                             $SCANNER_HOME/bin/sonar-scanner \
                             -Dsonar.projectKey=devops-backend \
                             -Dsonar.sources=. \
-                            -Dsonar.host.url=http://52.90.125.72:9000 \
+                            -Dsonar.host.url=http://ciserver:9000 \
                             -Dsonar.login=sqp_cef76984cefae6dd48c95850f23e4dcd048fe909
                         '''
                     }
@@ -98,8 +98,8 @@ pipeline {
                 dir('kubernetes-manifests/backend') {
                     withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                         sh '''
-                            git config user.email "rashiddaha80@gmail.com"
-                            git config user.name "codewithmuh"
+                            git config user.email "shreyasravath@outlook.com"
+                            git config user.name "ShreyasRavath"
                             BUILD_NUMBER=${BUILD_NUMBER}
                             echo $BUILD_NUMBER
                             imageTag=$(grep -oP '(?<=backend:)[^ ]+' deployment.yaml)

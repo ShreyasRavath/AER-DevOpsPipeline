@@ -67,11 +67,54 @@ aws ecr create-repository --repository-name front-end
 Get any of the push commands and execute it on jenkins server to ensure ecr is accessible. 
 
 Step 8: Configure Jenkins
+Set up all the credentials under system-> credentials to safely store all critical tokens and passwords
 
 
+Step 9 : Configure plugins
+Set up all plugins installed JDK, Sonar-scanner, nodejs, DP-Check and docker
+Note: all latest and install automatically is used.
 
+Step 10: Create EKS Cluster. Execute following command 
+```
+ eksctl create cluster --name three-tier-k8s-eks-cluster --region us-east-1 --node-type t2.medium --nodes-min 2 --nodes-max 2
 
+ #create LoadBalancer for ingress controller
+ ```
+ curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json
+ aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json
+ eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=three-tier-k8s-eks-cluster --approve
+eksctl create iamserviceaccount --cluster=three-tier-k8s-eks-cluster --namespace=kube-system --name=aws-load-balancer-controller --role-name AmazonEKSLoadBalancerControllerRole --attach-policy-arn=arn:aws:iam::381751878913:policy/AWSLoadBalancerControllerIAMPolicy --approve --region=us-east-1
+ ```
 
+Step10: Create AWS Load Balancer controller
+```
+helm repo add eks https://aws.github.io/eks-charts
+helm repo update eks
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=three-tier-k8s-eks-cluster --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller
+```
+#Note: use following command to check the LB controller deployment. 
+kubectl get deployment -n kube-system aws-load-balancer-controller
 
+Step11: configure grafana and prometheus
+Execute following commands. 
+```
+helm repo add stable https://charts.helm.sh/stable
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+kubectl create namespace monitoring
+helm install stable prometheus-community/kube-prometheus-stack -n monitoring
+kubectl get pods -n monitoring
+kubectl get svc -n monitoring
+```
 
+Step12: set grafana and prometheus to use LoadBalancer instead of clusterIP
+#edit the below files and set 
+```
+kubectl edit svc stable-kube-prometheus-sta-prometheus -n monitoring
+kubectl edit svc stable-kube-prometheus-sta-prometheus -n monitoring
+```
+![alt text](image.png)
 
+Step13: configure grafana and prometheus
+Login to grafana and create prometheus datasource and set the dashboard to use the new datasource
+
+Step14: 

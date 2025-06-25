@@ -19,7 +19,7 @@ pipeline {
         }
         stage('Checkout from Git') {
             steps {
-                git branch: 'main', credentialsId: 'GITHUB', url: 'https://github.com/codewithmuh/three-tier-devsecops-project.git'
+                git branch: 'main', credentialsId: 'GITHUB', url: 'https://github.com/ShreyasRavath/AER-DevOpsPipeline.git'
             }
         }
         stage('Sonarqube Analysis') {
@@ -30,7 +30,7 @@ pipeline {
                             $SCANNER_HOME/bin/sonar-scanner \
                             -Dsonar.projectKey=devops-frontend \
                             -Dsonar.sources=. \
-                            -Dsonar.host.url=http://52.90.125.72:9000 \
+                            -Dsonar.host.url=http://ciserver:9000 \
                             -Dsonar.login=sqp_c1aca466b5bee9f63b577da9a1bec6445f630104
                         '''
                     }
@@ -86,7 +86,7 @@ pipeline {
         }
         stage('Checkout Code') {
             steps {
-                git branch: 'main', credentialsId: 'GITHUB', url: 'https://github.com/codewithmuh/three-tier-devsecops-project.git'
+                git branch: 'main', credentialsId: 'GITHUB', url: 'https://github.com/ShreyasRavath/AER-DevOpsPipeline.git'
             }
         }
         stage('Update Deployment file') {
@@ -103,8 +103,8 @@ pipeline {
                             ls -l
                         '''
                         sh '''
-                            git config user.email "rashiddaha80@gmail.com"
-                            git config user.name "codewithmuh"
+                            git config user.email "shreyasravath@outlook.com"
+                            git config user.name "ShreyasRavath"
                             BUILD_NUMBER=${BUILD_NUMBER}
                             echo $BUILD_NUMBER
                             imageTag=$(grep -oP '(?<=frontend:)[^ ]+' deployment.yaml)
