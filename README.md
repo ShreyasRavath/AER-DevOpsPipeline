@@ -117,4 +117,34 @@ kubectl edit svc stable-kube-prometheus-sta-prometheus -n monitoring
 Step13: configure grafana and prometheus
 Login to grafana and create prometheus datasource and set the dashboard to use the new datasource
 
-Step14: 
+Step14: create jenkins pipeline
+Create two pipeline
+1. frontend : copy the code from https://github.com/ShreyasRavath/AER-DevOpsPipeline.git repo jenkins-pipeline-->jenkinsfile-frontend
+2. backend : copy the code from https://github.com/ShreyasRavath/AER-DevOpsPipeline.git repo jenkins-pipeline-->jenkinsfile-backend
+
+step15: Install ArgoCD for deployment automation
+execute following commands on the jenkins server
+```
+kubectl create namespace three-tier
+kubectl create secret generic ecr-registry-secret \
+  --from-file=.dockerconfigjson=${HOME}/.docker/config.json \
+  --type=kubernetes.io/dockerconfigjson --namespace three-tier
+kubectl get secrets -n three-tier
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v2.4.7/manifests/install.yaml
+#after above command, check whether all pods are running or not
+kubectl get pods -n argocd
+#Now lets expose the argocd app
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+```
+
+Step 16: Get ArgoCD Server Details. 
+```
+#To get LB details and password execute below command
+sudo apt install jq -y
+export ARGOCD_SERVER=$(kubectl get svc argocd-server -n argocd -o json | jq -r '.status.loadBalancer.ingress[0].hostname') && export ARGO_PWD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d) && echo "ARGOCD_SERVER: $ARGOCD_SERVER" && echo "ARGO_PWD: $ARGO_PWD"
+```
+
+Step 17:
+
+
