@@ -112,7 +112,7 @@ Step12: set grafana and prometheus to use LoadBalancer instead of clusterIP
 kubectl edit svc stable-kube-prometheus-sta-prometheus -n monitoring
 kubectl edit svc stable-kube-prometheus-sta-prometheus -n monitoring
 ```
-![alt text](https://github.com/ShreyasRavath/AER-DevOpsPipeline/image.png)
+![alt text](https://github.com/ShreyasRavath/AER-DevOpsPipeline/blob/main/image.png)
 
 Step13: configure grafana and prometheus
 Login to grafana and create prometheus datasource and set the dashboard to use the new datasource
@@ -159,7 +159,7 @@ Once done. All five apps will be visible as synced and we can validate the pod d
 ```
 kubectl get pods -n three-tier
 ```
-![alt text](https://github.com/ShreyasRavath/AER-DevOpsPipeline/image-1.png)
+![alt text](https://github.com/ShreyasRavath/AER-DevOpsPipeline/blob/main/image-1.png)
 
 
 Deletion Steps: 
